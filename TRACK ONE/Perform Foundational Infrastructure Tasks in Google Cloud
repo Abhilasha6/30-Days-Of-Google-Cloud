@@ -13,7 +13,7 @@ Click Navigation Menu-> Pub/Sub-> Topics-> Enter Topic ID-> Leave Encryption at 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <----Task3: Create the thumbnail Cloud Function ---->
-Cloud Concole-> Navigation Menu-> Cloud Functions-> Create Function
+Cloud Concole-> Navigation Menu-> Serverless-> Cloud Functions-> Create Function
 Enter these details-
 Function Name- myCloudF
 Region- us-east1
