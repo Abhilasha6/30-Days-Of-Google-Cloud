@@ -17,10 +17,10 @@ Cloud Concole-> Navigation Menu-> Serverless-> Cloud Functions-> Create Function
 Enter these details-
 Function Name- myCloudF
 Region- us-east1
+Browse-> Select the Qwiklabs bucket
 Entry point- thumbnail
 Trigger- Cloud Storage
 Event type- Create
-Select the Qwiklabs bucket
 
 In line 16 of index.js replace the text REPLACE_WITH_YOUR_TOPIC ID with the Topic ID you created in task 2.
 
