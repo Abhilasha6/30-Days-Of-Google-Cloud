@@ -1,33 +1,92 @@
 TASK 1: Create development VPC manually-
-
+Open Cloud Console
+Go to Networking-> VPC Network-> Create a VPC Network
+Enter the given data
+To enter multiple subnets, click on Add Subnet and then add the other subnets.
+*Remember to keep the region as us-east1
 
 -----------------------------------------------------------------------------------------------------------------------------
 TASK 2: Create production VPC manually-
-
+Open Cloud Console
+Go to Networking-> VPC Network-> Create a VPC Network
+Enter the given data
+To enter multiple subnets, click on Add Subnet and then add the other subnets.
+*Remember to keep the region as us-east1
 
 -----------------------------------------------------------------------------------------------------------------------------
 TASK 3: Create bastion host - 
+Run these commands in Cloud Shell-
+gcloud compute instances create bastion --network-interface=network=griffin-dev-vpc,subnet=griffin-dev-mgmt --network-interface=network=griffin-prod-vpc,subnet=griffin-prod-mgmt --tags=ssh --zone=us-east1-b
 
+gcloud compute firewall-rules create fw-ssh-dev --source-ranges=0.0.0.0/0 --target-tags ssh --allow=tcp:22 --network=griffin-dev-vpc
+
+gcloud compute firewall-rules create fw-ssh-prod --source-ranges=0.0.0.0/0 --target-tags ssh --allow=tcp:22 --network=griffin-prod-vpc
 
 -----------------------------------------------------------------------------------------------------------------------------
 TASK 4: Create and configure Cloud SQL instance -
+Open Navigation Menu-> SQL-> Create an instance-> My SQL-> Choose MySQL
+Enter the given data to create the instance.
+Click Create.
+// It will take some time to create the instance.
 
+Connect to the instance by executing this command-
+gcloud sql connect griffin-dev-db
+//Type the password you entered while creating the SQL inatance.
+
+To create a WordPress database-
+CREATE DATABASE wordpress;
+GRANT ALL PRIVILEGES ON wordpress.* TO "wp_user"@"%" IDENTIFIED BY "stormwind_rules";
+FLUSH PRIVILEGES;
+
+When the task gets completed, type: exit
 
 -----------------------------------------------------------------------------------------------------------------------------
 TASK 5: Create Kubernetes cluster -
+TO Create a 2 node cluster (n1-standard-4) called griffin-dev, in the griffin-dev-wp subnet, and in zone us-east1-b.
+gcloud container clusters create griffin-dev \
+ --network griffin-dev-vpc \
+ --subnetwork griffin-dev-wp \
+ --machine-type n1-standard-4 \
+ --num-nodes 2 \
+ --zone us-east1-b
+ 
+gcloud container clusters get-credentials griffin-dev --zone us-east1-b
 
+cd ~/
+
+gsutil cp -r gs://cloud-training/gsp321/wp-k8s 
 
 -----------------------------------------------------------------------------------------------------------------------------
 TASK 6: Prepare the Kubernetes cluster -
+// Open Editor -> wp-k8s -> wp-env.yaml Change username and password to :- username : wp_user password : stormwind_rules then SAVE it.
+cd wp-k8s
 
+kubectl create -f wp-env.yaml
+
+gcloud iam service-accounts keys create key.json \
+ --iam-account=cloud-sql-proxy@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
+ 
+kubectl create secret generic cloudsql-instance-credentials \
+ --from-file key.json
 
 -----------------------------------------------------------------------------------------------------------------------------
 TASK 7: Create a WordPress deployment -
+edit wp-deployment.yaml and replace YOUR_SQL_INSTANCE with griffin-dev-db's Instance connection name. Get the Instance connection name from your Cloud SQL instance-
+Go to spec-> command, here you will find the YOUR_SQL_INSTANCE. now replace it with griffin-dev-db. Then SAVE it.
 
+create the service with wp-service.yaml-
+kubectl create -f wp-deployment.yaml
+kubectl create -f wp-service.yaml
 
 -----------------------------------------------------------------------------------------------------------------------------
 TASK 8: Enable monitoring -
+Create an uptime check for your WordPress development site.
+Navigation Menu -> Kubernetes Engine -> Services and Ingress -> Copy Endpoint's address.
 
+Navigation Menu -> Monitoring -> Uptime Checks -> + CREATE UPTIME CHECK Title : Wordpress Uptime // Next -> Target Hostname : {Endpoint's address} (without http...) Path : / // Next -> Next -> Create
 
 -----------------------------------------------------------------------------------------------------------------------------
 TASK 9: Provide access for an additional engineer -
+Navigation Menu -> IAM & Admin -> IAM -> ADD New Member : {Username 2 from Lab instruction page} Role : Project -> Editor
+
+Save.
