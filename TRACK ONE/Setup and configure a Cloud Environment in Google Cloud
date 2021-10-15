@@ -24,7 +24,7 @@ gcloud compute firewall-rules create fw-ssh-prod --source-ranges=0.0.0.0/0 --tar
 
 -----------------------------------------------------------------------------------------------------------------------------
 TASK 4: Create and configure Cloud SQL instance -
-Open Navigation Menu-> SQL-> Create an instance-> My SQL-> Choose MySQL
+Open Navigation Menu-> Databases-> SQL-> Create an instance-> My SQL-> Choose MySQL
 Enter the given data to create the instance.
 Click Create.
 // It will take some time to create the instance.
