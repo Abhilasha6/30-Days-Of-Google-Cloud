@@ -109,3 +109,31 @@ Tag your change and push it to the source code repository:
 git commit -a -m "Change color to blue"
 git tag v1.0.1
 git push --tags
+
+----------------------Or(this worked)--------------------------------
+In Cloud Console:
+gcloud config set compute/zone us-east1-b
+gcloud source repos clone sample-app
+cd sample-app
+touch a
+git config --global user.email "$(gcloud config get-value account)"
+git config --global user.name "Student"
+git commit -a -m "change"
+git tag v1.0.1
+git push --tags
+
+then In the Console, click on Navigation menu > Kubernetes Engine > ServiceS & Ingress
+Search spin-deck.
+Click Port Forward at the end of the detail page.
+
+Clone your source code repository
+In the Console, click on Navigation menu > Source Repositories.
+Click sample-app.
+Click Clone at the top of the repository, and copy the git clone command to the Cloud Shell.
+
+When this line appears : Forwarding from 127.0.0.1:8080 -> 9000, then open the Web preview on port 8080
+click on applications-> sample-> pipelines
+start the pipeline manually if not automatically started
+Approve the deployment to production(hover over the yellow colour person icon)-> click Continue
+//The entire pipeline will get green within sometime, do not switvh the tab after you clicked continue.
+then your assessment should get completed.
