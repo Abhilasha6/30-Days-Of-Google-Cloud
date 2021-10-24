@@ -14,6 +14,7 @@ docker build -t valkyrie-app:v0.0.1 .
 cd ..
 cd marking
 ./step1.sh
+//this performs the local check of your work.
 
 -------------------Task 2: Test the created Docker image-------------------
 cd ..
@@ -22,6 +23,7 @@ docker run -p 8080:8080 valkyrie-app:v0.0.1 &
 cd ..
 cd marking
 ./step2.sh
+//this performs the local check of your work.
 
 -------------------Task 3: Push the Docker image in the Container Repository-------------------
 cd ..
@@ -37,16 +39,20 @@ kubectl create -f k8s/deployment.yaml
 kubectl create -f k8s/service.yaml
 
 git merge origin/kurt-dev
+// wait for 1-2 mins for the assessment to get green tick mark.
 
 -------------------Task 5: Update the deployment with a new version of valkyrie-app-------------------
-Increase the replicas from 1 to 3
-
+Increase the replicas from 1 to 3-
 kubectl edit deployment valkyrie-dev
 
+Press "i" to get into insert mode and change "replicas" from 1 to 3. Press "Esc" -> ":wq" -> Enter to exit Vim
+
+Update the deployment with a new version of valkyrie-app-
 docker build -t gcr.io/$GOOGLE_CLOUD_PROJECT/valkyrie-app:v0.0.2 .
 docker push gcr.io/$GOOGLE_CLOUD_PROJECT/valkyrie-app:v0.0.2
 kubectl edit deployment valkyrie-dev
 
+Press 'i' to edit and change image to "image: gcr.io/YOUR_PROJECT_ID/valkyrie-app:v0.0.2". Press "Esc" -> ":wq" -> Enter to exit Vim
 docker ps
 
 -------------------Task 6: Create a pipeline in Jenkins to deploy your app-------------------
@@ -58,27 +64,28 @@ printf $(kubectl get secret cd-jenkins -o jsonpath="{.data.jenkins-admin-passwor
 //Remember the password you get from here
 
 gcloud source repos list
+//Remember the repo url you get from here
 
 Open Jenkins Web View -> Preview on port 8080
 
    Username : admin
    Password : {Code output from previous command}
 
- click on Manage Jenkins -> Manage Credentials -> Global -> add credentials -> Kind: Google Service Account from metadata -> OK
+Click on Manage Jenkins -> Manage Credentials -> Jenkins-> Global credentials -> add credentials -> Kind: Google Service Account from metadata -> OK
 
-Click on Jenkins -> New Item -> Name : valkyrie-app -> Pipeline -> OK
+Click on Jenkins-> Dasboard-> New Item -> Name : valkyrie-app -> Pipeline -> OK
 
-  Click on Pipeline -> Script: Pipeline script from SCM -> SCM: Git
+Click on Pipeline -> Script: Pipeline script from SCM -> SCM: Git
 
 Repository URL: {Url from previous command} -> Credentials: {Project id}
-
-Apply -> Save
+//deont worry about the eeor you get immediately after entering the url, after you enter your project id in Credentials that error will disappear.
+Click Save
 
 In cloud shell run-
 
 sed -i "s/green/orange/g" source/html.go
 
-sed -i "s/YOUR_PROJECT/$GOOGLE_CLOUD_PROJECT/g" Jenkinsfile
+sed -i "s/YOUR_PROJECT/$GOOGLE_CLOUD_PROJECT/g" Jenkinsfile   // enter your project id
 git config --global user.email "you@example.com"              // enter your github Email
 git config --global user.name "student..."                       // enter tour github Username
 git add .
