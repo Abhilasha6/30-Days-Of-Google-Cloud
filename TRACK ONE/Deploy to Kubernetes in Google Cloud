@@ -85,9 +85,9 @@ In cloud shell run-
 
 sed -i "s/green/orange/g" source/html.go
 
-sed -i "s/YOUR_PROJECT/$GOOGLE_CLOUD_PROJECT/g" Jenkinsfile   // enter your project id
-git config --global user.email "you@example.com"              // enter your github Email
-git config --global user.name "student..."                       // enter tour github Username
+sed -i "s/YOUR_PROJECT/$GOOGLE_CLOUD_PROJECT/g" Jenkinsfile   //do not enter your project id
+git config --global user.email "you@example.com"              // enter your personal github Email or the qwiklabs email provided to you in console
+git config --global user.name "student..."                       // enter tour github Username or the qwiklabs username provided to you in console
 git add .
 git commit -m "built pipeline init"
 git push
